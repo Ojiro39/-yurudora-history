@@ -182,4 +182,42 @@ const style=document.createElement('style');style.textContent=`
 `;document.head.appendChild(style);
 // The full-size top illustration depicts evolved monsters; playable selection cards and battle art show the actual current form.
 home();
-})();</script></body></html>
+})();</script><style>
+/* Companion portraits cover the evolved illustrations in the original poster. */
+#rpgBoard .baby-poster{position:absolute;top:17.8%;width:28.2%;height:27%;border-radius:14px;overflow:hidden;display:flex;align-items:center;justify-content:center;flex-direction:column;pointer-events:none;z-index:2;background:radial-gradient(circle at 50% 35%,#315078,#0b1930 76%);border:2px solid #bb9c65;box-shadow:inset 0 0 25px #020817}
+#rpgBoard .baby-poster svg{width:95%;height:72%;filter:drop-shadow(0 9px 8px #0009);animation:floatBaby 3s ease-in-out infinite}
+#rpgBoard .baby-poster strong{color:#fbe3a0;font-size:clamp(10px,2.7vw,19px);text-shadow:0 2px 4px black}
+#rpgBoard .baby-poster small{color:#d5e9ff;font-size:clamp(8px,2vw,14px)}
+#rpgBoard .hot{z-index:5}
+@keyframes floatBaby{50%{transform:translateY(-7px)}}
+.enemy-beast{height:195px;display:flex;align-items:center;justify-content:center;filter:drop-shadow(0 8px 8px #0008);animation:beastBreath 2.6s ease-in-out infinite}
+.enemy-beast svg{height:100%;width:100%;max-width:210px;overflow:visible}
+@keyframes beastBreath{50%{transform:translateY(-7px) scale(1.025)}}
+.reset-adventure{margin:12px auto;padding:11px 18px;display:block;border:1px solid #b69b75;border-radius:12px;background:#162e4d;color:#f6dfac;font-weight:bold;cursor:pointer}
+</style><script>
+(function(){
+// Enemy art is independent of the three playable companions.
+const beastShapes=[
+// wolf
+`<path d="M36 154 17 119 48 130 62 99 100 89 143 112 174 108 193 74 213 124 192 152 155 165 148 199 128 199 119 164 82 169 69 199 49 199 55 161Z"/><path d="M150 112 170 67 185 100 204 76 207 127 189 144 161 143Z"/><path d="M177 125 190 129 182 135" fill="#fff4a1" stroke="none"/>`,
+// armored beetle
+`<path d="M94 56 67 20 78 12 113 49 145 13 155 22 130 61" fill="none" stroke-width="13"/><path d="M75 102 31 79 18 92 67 125 29 144 34 162 80 148 60 190 75 201 101 164 140 164 169 202 182 188 157 148 203 161 209 143 166 124 211 90 195 77 155 101"/><path d="M70 89Q115 46 158 89L172 145Q146 192 113 193Q80 192 59 145Z"/><path d="M114 78V184M74 115H154" fill="none" stroke="#d8c4a0" stroke-width="5"/><path d="M79 101 99 110 87 120M151 101 130 110 141 120" fill="#ffec85" stroke="none"/>`,
+// bat / griffin
+`<path d="M113 99 63 57 9 67 27 103 5 132 64 120 85 165 112 145 142 165 163 120 221 132 197 103 214 67 161 57Z"/><path d="M83 89 89 38 108 65 123 65 144 38 149 89 139 141 96 141Z"/><path d="M94 107 108 112 102 122M136 107 122 112 128 122" fill="#f9e789" stroke="none"/><path d="M106 148 87 196 113 181 140 196 123 148"/>`,
+// stone golem
+`<path d="M60 88 32 110 22 160 58 173 82 143 143 143 166 173 204 158 193 109 164 88"/><path d="M73 73 99 39 141 48 160 77 151 118 85 124Z"/><path d="M80 124 147 124 165 190 140 209 113 187 88 209 61 190Z"/><path d="M90 88 110 94 102 108M141 88 121 94 129 108" fill="#f6e48a" stroke="none"/>`,
+// serpent
+`<path d="M40 180Q13 151 44 124Q68 100 99 123Q128 147 151 115Q170 91 150 71Q139 55 157 41Q180 27 197 50L217 63 198 77Q213 116 190 149Q158 200 113 171Q80 149 66 166Q60 174 79 194Z"/><path d="M166 54 185 53 175 63" fill="#fff5a3" stroke="none"/><path d="M169 83 183 103 173 126" fill="none" stroke="#d7eac0" stroke-width="5"/>`,
+// dragon
+`<path d="M59 137 13 78 70 91 89 113 120 100 164 84 204 49 194 111 219 144 179 133 165 190 141 196 130 158 103 173 84 205 62 199 75 161Z"/><path d="M151 91 163 51 176 79 196 59 194 112"/><path d="M176 107 190 111 181 120" fill="#fff4a1" stroke="none"/>`
+];
+const colors=[['#293a5a','#6c8cb6'],['#463c56','#ad8294'],['#302b55','#776db9'],['#5e514c','#a39c8b'],['#244e52','#68b7aa'],['#522c38','#bd6874']];
+foeArt=function(i){const k=i%beastShapes.length,c=colors[k],uid='beast'+i;return `<div class="enemy-beast"><svg viewBox="0 0 230 225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="敵モンスター"><defs><linearGradient id="${uid}" x2=".9" y2="1"><stop stop-color="${c[1]}"/><stop offset="1" stop-color="${c[0]}"/></linearGradient></defs><g fill="url(#${uid})" stroke="#11192b" stroke-width="6" stroke-linejoin="round">${beastShapes[k]}</g></svg></div>`};
+// Replace the evolved monsters on the clickable home poster with baby art.
+const board=document.getElementById('rpgBoard');
+if(board){['炎の幼竜','水の幼竜','森の幼獣'].forEach((name,i)=>{const box=document.createElement('div');box.className='baby-poster';box.style.left=(5.2+i*30.2)+'%';box.innerHTML=art(i,1).replace(/<span class="form-tag">.*?<\/span>/,'')+`<strong>${name}</strong><small>幼体から育てよう</small>`;board.appendChild(box)});}
+// Optional new-game reset, preserving other achievements and stage completion.
+const reset=document.createElement('button');reset.className='reset-adventure';reset.textContent='🥚 新しい相棒をLv.1から育てる（経験値リセット）';reset.onclick=()=>{if(confirm('相棒の経験値を0に戻して、幼体から育て直しますか？ ステージのクリア記録は残ります。')){xp=0;localStorage.setItem('yurudora_xp','0');home();alert('Lv.1の幼体になりました！')}};
+if(board)board.insertAdjacentElement('afterend',reset);
+})();
+</script></body></html>
